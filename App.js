@@ -14,6 +14,8 @@ import BottomTab from './components/bottomTab';
 import InfoPage from './components/infoPage';
 
 
+
+
 const URL = "https://api.wheretheiss.at/v1/satellites/25544";
 const REFRESH_MILLIS = 10000;
 const CAM = {
@@ -29,7 +31,8 @@ export default function App() {
   function update(){
     axios.get(URL,{headers:{"Cache-Control":"no-cache"}}).then(res=>{
       setIssData(res.data);
-      // console.log(res.headers);
+      console.log(res.data);
+      //console.log(res.headers["x-rate-limit-remaining"]);
     }).catch(err=>{
       console.log(err.message);
     })
@@ -45,6 +48,7 @@ export default function App() {
   return (
     issData.altitude ?
     <SafeAreaView style={styles.container}>
+      
         <MapView 
         region={follow && {latitude:Number(issData.latitude),longitude:Number(issData.longitude), latitudeDelta: CAM.latitudeDelta, longitudeDelta: CAM.longitudeDelta}}
         style={styles.map} 
@@ -54,8 +58,8 @@ export default function App() {
             </Marker>
         </MapView>
     <BottomTab  toggleInfoPage={()=>setInfoPageData({...infoPageData,show:!infoPageData.show})} follow={follow} toggleFollow={()=>setFollow(!follow)} />
-    <Modal animationType='slide' visible={infoPageData.show}>
-      <InfoPage issData={issData} toggleInfoPage={()=>setInfoPageData({...infoPageData,show:!infoPageData.show})}/>
+    <Modal  animationType='slide' visible={infoPageData.show}>
+      <InfoPage issData={issData} toggleInfoPage={()=>setInfoPageData({...infoPageData,show:false})}/>
     </Modal>
     <StatusBar style="light" backgroundColor='black' hidden/>
     </SafeAreaView>:
